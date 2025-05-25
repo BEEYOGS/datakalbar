@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DataKalbar v7</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./icon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./icon-16.png">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --bg-primary: #0f0f0f;
+      --bg-card: #1e1e1e;
+      --border-card: #2a2a2a;
+      --text-main: #e0e0e0;
+      --text-muted: #9e9e9e;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --accent: #f43f5e;
+      --accent-hover: #dc2626;
+      --shadow-card: rgba(0, 0, 0, 0.6);
+      --glow-primary: rgba(79, 70, 229, 0.4);
+      --glow-accent: rgba(244, 63, 94, 0.4);
+      --hover-bg: rgba(255, 255, 255, 0.05);
+
+      /* Scrollbar colors */
+      --scrollbar-bg: #2a2a2a;
+      --scrollbar-thumb: #4f46e5;
+      --scrollbar-thumb-hover: #4338ca;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      margin: 0;
+      overflow-x: hidden;
+    }
+    h1, h2 {
+      color: var(--text-main);
+    }
+    a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+    a:hover {
+      color: var(--primary-hover);
+    }
+    button:focus, select:focus, input:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.3);
+    }
+
+    /* Hilangkan panah spin di input[type=number] */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 8px var(--glow-primary); }
+      50% { box-shadow: 0 0 16px var(--glow-primary); }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Custom scrollbar for WebKit browsers */
+    ::-webkit-scrollbar {
+      width: 12px;
+      background-color: var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-track {
+      background-color: var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbar-thumb);
+      border-radius: 6px;
+      border: 3px solid var(--scrollbar-bg);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--scrollbar-thumb-hover);
+    }
+
+    /* Custom scrollbar for Firefox */
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    header h1 .logo-icon {
+      font-size: 1.75rem;
+      color: var(--primary);
+      animation: bounce 2s infinite;
+    }
+    header h1 span {
+      font-size: 1.125rem;
+      font-weight: 400;
+      color: var(--primary);
+      opacity: 0.85;
+    }
+
+    .control-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 16px var(--shadow-card);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .control-panel::before {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, var(--primary) 0%, transparent 70%);
+      opacity: 0.2;
+    }
+    .control-panel::after {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      left: -20px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle at 70% 70%, var(--accent) 0%, transparent 70%);
+      opacity: 0.15;
+    }
+    .control-panel h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .control-panel h2::after {
+      content: "";
+      position: absolute;
+      width: 3rem;
+      height: 2px;
+      background: var(--primary);
+      bottom: -8px;
+      left: 0;
+      border-radius: 2px;
+    }
+    .field {
+      margin-bottom: 1rem;
+    }
+    .control-panel label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .control-panel select,
+    .control-panel input[type="number"],
+    .control-panel input[type="text"],
+    .control-panel select[name="sort"] {
+      width: 100%;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.875rem;
+      color: var(--text-main);
+      background: #2a2a2a;
+      border: 1px solid var(--border-card);
+      border-radius: 0.5rem;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+    .control-panel select:hover,
+    .control-panel input[type="number"]:hover,
+    .control-panel input[type="text"]:hover,
+    .control-panel select[name="sort"]:hover {
+      border-color: var(--primary);
+      background: #333333;
+    }
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .actions button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #fff;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+    .actions button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      transform: skewX(-20deg);
+      transition: left 0.4s;
+    }
+    .actions button:hover::before {
+      left: 150%;
+    }
+    .generate {
+      background: var(--primary);
+      box-shadow: 0 4px 16px var(--glow-primary);
+    }
+    .generate:hover {
+      background: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px var(--glow-primary);
+    }
+    .clear {
+      background: var(--accent);
+      box-shadow: 0 4px 16px var(--glow-accent);
+    }
+    .clear:hover {
+      background: var(--accent-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px var(--glow-accent);
+    }
+    .actions button i {
+      font-size: 1rem;
+    }
+
+    #results {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px var(--shadow-card);
+      overflow: hidden;
+      transition: all 0.3s ease-out;
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    .card::before {
+      content: "";
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 140px;
+      height: 140px;
+      background: radial-gradient(circle at 40% 40%, var(--primary) 0%, transparent 70%);
+      opacity: 0.15;
+      z-index: 0;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      bottom: -30px;
+      left: -30px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle at 60% 60%, var(--accent) 0%, transparent 70%);
+      opacity: 0.12;
+      z-index: 0;
+    }
+    .card:hover {
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 8px 32px var(--shadow-card);
+    }
+    .card-header {
+      background: linear-gradient(135deg, var(--bg-card) 0%, #2a2a2a 100%);
+      padding: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 1px solid var(--border-card);
+    }
+    .card-header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+    .card-header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-left: auto;
+    }
+    .index-badge {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      padding: 0.25rem 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 0.5rem;
+    }
+    .avatar {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 1rem;
+      background: linear-gradient(45deg, var(--primary) 0%, var(--primary-hover) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: #fff;
+      box-shadow: 0 4px 12px var(--glow-primary);
+      transition: all 0.3s ease;
+      animation: pulse-glow 2s infinite;
+    }
+    .avatar:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 6px 20px var(--glow-primary);
+    }
+    .title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, #fff 0%, #e0e0e0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .region-badge {
+      font-size: 0.8rem;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      box-shadow: 0 2px 8px var(--glow-primary);
+      animation: pulse-glow 2.5s infinite;
+      white-space: nowrap;
+    }
+    .card-body {
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(30, 30, 30, 0.8) 100%);
+    }
+    .field {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem;
+      border-radius: 0.75rem;
+      background: rgba(255, 255, 255, 0.03);
+      transition: all 0.2s ease;
+    }
+    .field:hover {
+      background: rgba(255, 255, 255, 0.05);
+      transform: translateX(4px);
+    }
+    .field label {
+      color: var(--text-muted);
+      min-width: 2rem;
+      text-align: center;
+    }
+    .field span {
+      flex: 1;
+      line-height: 1.5;
+    }
+    .card-footer {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      border-top: 1px solid var(--border-card);
+    }
+    .social-info {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      transition: background 0.2s;
+    }
+    .social-info:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .delete-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.8;
+    }
+    .delete-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      transform: scale(1.1) rotate(90deg);
+      opacity: 1;
+    }
+
+    .empty-state {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 16px var(--shadow-card);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      position: relative;
+      overflow: hidden;
+    }
+    .empty-state::before {
+      content: "";
+      position: absolute;
+      top: -30px;
+      right: -30px;
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle at 40% 40%, var(--primary) 0%, transparent 70%);
+      opacity: 0.1;
+    }
+    .empty-state::after {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      left: -20px;
+      width: 80px;
+      height: 80px;
+      background: radial-gradient(circle at 60% 60%, var(--accent) 0%, transparent 70%);
+      opacity: 0.08;
+    }
+    .empty-state i {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-muted);
+    }
+    .empty-state p {
+      margin: 0.5rem 0 0;
+      font-size: 1rem;
+    }
+
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #10b981;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 100;
+    }
+    #toast.show {
+      opacity: 1;
+    }
+    #toast i {
+      font-size: 1rem;
+    }
+    #toast.error {
+      background: var(--accent);
+    }
+
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+    }
+    #loading .loader {
+      background: var(--bg-card);
+      padding: 2rem;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 16px var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    #loading .loader i {
+      font-size: 2rem;
+      color: var(--primary);
+      animation: spin 1s linear infinite;
+    }
+    #loading .loader p {
+      margin: 0;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    /* Card Animation */
+    .card {
+      animation: cardAppear 0.3s ease-out;
+    }
+    
+    @keyframes cardAppear {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Loading Skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, 
+        var(--bg-card) 25%, 
+        var(--border-card) 50%, 
+        var(--bg-card) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 0.5rem;
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+    
+    .skeleton-card {
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    
+    .skeleton-header {
+      height: 3.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .skeleton-body {
+      display: grid;
+      gap: 0.75rem;
+    }
+    
+    .skeleton-line {
+      height: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .card-body {
+        grid-template-columns: 1fr;
+      }
+      .actions {
+        flex-direction: column;
+      }
+    }
+    @media (max-width: 768px) {
+      .card-header {
+        padding: 1rem;
+        flex-wrap: wrap;
+      }
+      
+      .avatar {
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.25rem;
+        border-radius: 0.75rem;
+      }
+      
+      .title {
+        font-size: 1.1rem;
+      }
+      
+      .region-badge {
+        font-size: 0.75rem;
+        padding: 0.35rem 0.75rem;
+      }
+      
+      .card-body {
+        padding: 1rem;
+        gap: 1rem;
+        grid-template-columns: 1fr;
+      }
+      
+      .field {
+        padding: 0.5rem;
+        gap: 0.75rem;
+      }
+    }
+  </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="icon" type="image/png" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <h1>
+        <i class="logo-icon fa-solid fa-database"></i>
+        DataKalbar <span>v7</span>
+      </h1>
+    </header>
+
+    <!-- Panel Kontrol -->
+    <div class="control-panel">
+      <h2>Kontrol Data</h2>
+
+      <div class="field">
+        <label for="region">Pilih Daerah</label>
+        <select id="region" aria-label="Pilih Daerah">
+          <option value="sungai_raya_kepulauan">Kec. Sungai Raya Kepulauan</option>
+          <option value="singkawang">Kota Singkawang</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="count">Jumlah Data</label>
+        <input type="number" id="count" min="1" max="20" value="5" aria-label="Jumlah Data"/>
+      </div>
+
+      <div class="field">
+        <label for="sortSelect">Urutkan</label>
+        <select id="sortSelect" name="sort" aria-label="Urutkan Data">
+          <option value="none">Tanpa Urutan</option>
+          <option value="name_asc">Nama A–Z</option>
+          <option value="name_desc">Nama Z–A</option>
+          <option value="job_asc">Pekerjaan A–Z</option>
+          <option value="job_desc">Pekerjaan Z–A</option>
+        </select>
+      </div>
+
+      <div class="actions">
+        <button id="generateBtn" class="generate" aria-label="Generate Data">
+          <i class="fa-solid fa-bolt"></i> Generate
+        </button>
+        <button id="clearBtn" class="clear" aria-label="Hapus Semua">
+          <i class="fa-solid fa-trash"></i> Hapus Semua
+        </button>
+      </div>
+    </div>
+
+    <!-- Daftar Hasil -->
+    <div id="results">
+      <div class="empty-state">
+        <i class="fa-regular fa-folder-open"></i>
+        <p>Belum Ada Data. Pilih daerah dan tekan “Generate”.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" role="status" aria-live="polite">
+    <i class="fa-solid fa-check"></i>
+    <span>Berhasil disalin!</span>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div id="loading">
+    <div class="loader">
+      <i class="fa-solid fa-spinner"></i>
+      <p>Menghasilkan data...</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const dataMap = {
+        sungai_raya_kepulauan: {
+          jobs: [
+            { job: 'Nelayan', workplaces: ['Pelabuhan Karimunting', 'Pelabuhan Pulau Lemukutan', 'Pelabuhan Pulau Kabung'] },
+            { job: 'Petani Kelapa', workplaces: ['Perkebunan Kelapa Rakyat'] },
+            { job: 'Petani Karet', workplaces: ['Perkebunan Karet Desa Sungai Keran'] },
+            { job: 'Petani Sawit', workplaces: ['Perkebunan Sawit Desa Sungai Duri'] },
+            { job: 'Pedagang Hasil Laut', workplaces: ['Pasar Ikan Karimunting'] },
+            { job: 'Pengolah Kopra', workplaces: ['Perkebunan Kelapa Rakyat'] },
+            { job: 'Guru SD', workplaces: ['SD Negeri Karimunting'] },
+            { job: 'Guru SMP', workplaces: ['SMP Negeri 1 Sungai Raya Kepulauan'] },
+            { job: 'Kepala Desa', workplaces: ['Balai Desa Karimunting', 'Balai Desa Sungai Keran'] },
+            { job: 'Sekretaris Desa', workplaces: ['Balai Desa Karimunting', 'Balai Desa Sungai Keran'] },
+            { job: 'Petugas Kesehatan', workplaces: ['Puskesmas Karimunting'] },
+            { job: 'Bidan Desa', workplaces: ['Polindes Pulau Lemukutan', 'Polindes Pulau Kabung'] },
+            { job: 'Pedagang Kelontong', workplaces: ['Toko Sembako Bahari'] },
+            { job: 'Pemilik Warung', workplaces: ['Warung Makan Pesisir'] },
+            { job: 'Tukang Kayu', workplaces: ['Bengkel Perahu Nelayan'] },
+            { job: 'Tukang Perahu', workplaces: ['Bengkel Perahu Nelayan'] },
+            { job: 'Pengrajin Anyaman', workplaces: ['Sentra Kerajinan Anyaman'] },
+            { job: 'Peternak', workplaces: ['Peternakan Ayam Kampung'] },
+            { job: 'Petugas Pelabuhan', workplaces: ['Pelabuhan Karimunting'] },
+            { job: 'Operator Kapal', workplaces: ['Pelabuhan Karimunting'] },
+            { job: 'Petugas Kecamatan', workplaces: ['Kantor Kecamatan Sungai Raya Kepulauan'] },
+            { job: 'Penjaga Mercusuar', workplaces: ['Mercusuar Tanjung Bajau'] },
+            { job: 'Pemandu Wisata Pulau', workplaces: ['Dermaga Wisata Pulau Lemukutan'] },
+            { job: 'Pengusaha Homestay', workplaces: ['Homestay Pulau Randayan'] },
+            { job: 'Penjual Ikan', workplaces: ['Pasar Ikan Karimunting'] },
+            { job: 'Pengolah Ikan Asin', workplaces: ['Tempat Pengolahan Ikan Asin'] }
+          ],
+          firstNames: [
+            'Agus', 'Budi', 'Chandra', 'Dedi', 'Eko', 'Fitra', 'Galih', 'Hendra', 'Indra', 'Joko',
+            'Rina', 'Sari', 'Wati', 'Yanti', 'Lia', 'Nita', 'Ika', 'Fina', 'Heni', 'Dina',
+            'Wahyu', 'Bambang', 'Dimas', 'Andi', 'Yudi', 'Rudi', 'Tono', 'Hadi', 'Santoso', 'Pandi',
+            'Maya', 'Linda', 'Dewi', 'Sinta', 'Nina', 'Ratna', 'Yuni', 'Tuti', 'Lina', 'Suci'
+          ],
+          lastNames: [
+            'Wijaya', 'Susanto', 'Gunawan', 'Santoso', 'Wibowo', 'Hidayat', 'Pratama', 'Lestari', 'Putri', 'Saputra',
+            'Wong', 'Tjhin', 'Tjan', 'Kwee', 'Lau', 'Liong', 'Tio', 'Hoo', 'Ong', 'Lim',
+            'Kusuma', 'Pranata', 'Utama', 'Putra', 'Permana', 'Nugraha', 'Setiawan', 'Budiman', 'Suryadi', 'Hartono',
+            'Halim', 'Hendra', 'Salim', 'Tan', 'Wati', 'Dewi', 'Susanti', 'Permata', 'Sari', 'Pertiwi'
+          ],
+          villages: [
+            'Karimunting', 'Sungai Keran', 'Pulau Lemukutan', 'Pulau Kabung', 'Pulau Randayan',
+            'Tanjung Bajau', 'Teluk Suak', 'Teluk Pakedai', 'Sungai Duri', 'Tanjung Gundul',
+            'Sungai Raya', 'Pulau Tempurung', 'Teluk Nipah', 'Tanjung Lumpur', 'Pantai Cermin'
+          ],
+          streets: [
+            'Jl. Pantai Karimunting', 'Jl. Pelabuhan Karimunting', 'Jl. Puskesmas', 'Jl. Sekolah',
+            'Jl. Perkebunan', 'Jl. Dermaga', 'Jl. Tanjung Raya', 'Jl. Teluk Suak', 'Jl. Keramat',
+            'Jl. Pasar Ikan', 'Jl. Mercusuar', 'Jl. Nelayan', 'Jl. Pulau Kabung', 'Jl. Pantai Indah',
+            'Jl. Pelita'
+          ],
+          regionLabel: 'Kec. Sungai Raya Kepulauan'
+        },
+        singkawang: {
+          jobs: [
+            { job: 'Pedagang', workplaces: ['Pasar Hongkong','Pasar Turi','Pasar Tradisional Singkawang'] },
+            { job: 'Pengusaha Kuliner', workplaces: ['Restoran Seafood Bahari','Sentra Kuliner Kota Baru'] },
+            { job: 'Pengrajin Keramik', workplaces: ['Sentra Keramik Sedau'] },
+            { job: 'Nelayan', workplaces: ['Pelabuhan Nelayan Pasir Panjang'] },
+            { job: 'Guru SD', workplaces: ['SD Negeri 1 Singkawang'] },
+            { job: 'Guru SMP', workplaces: ['SMP Negeri 1 Singkawang'] },
+            { job: 'Dokter', workplaces: ['Rumah Sakit Umum Daerah Singkawang'] },
+            { job: 'Perawat', workplaces: ['Rumah Sakit Umum Daerah Singkawang'] },
+            { job: 'Polisi', workplaces: ['Polres Singkawang'] },
+            { job: 'TNI', workplaces: ['Korem 121/Abw'] },
+            { job: 'Taksi', workplaces: ['Kantor Taksi Martajaya'] },
+            { job: 'Kondektur', workplaces: ['Terminal Datu Adil'] },
+            { job: 'Petugas Pemadam', workplaces: ['Pemadam Kebakaran Singkawang'] },
+            { job: 'Pengusaha Hotel', workplaces: ['Hotel Singkawang Plaza'] },
+            { job: 'Pemandu Wisata Tionghoa', workplaces: ['Kantor Pariwisata Singkawang'] },
+            { job: 'Supir Angkot', workplaces: ['Terminal Pasar Hongkong'] },
+            { job: 'Koki', workplaces: ['Restoran Tionghoa Kuno'] },
+            { job: 'Barista', workplaces: ['Kedai Kopi Pagi'] },
+            { job: 'Buruh Bangunan', workplaces: ['Proyek Jalan Baru'] },
+            { job: 'Petugas Lalu Lintas', workplaces: ['Polres Singkawang'] }
+          ],
+          firstNames: [
+            'Adi', 'Bimo', 'Citra', 'Dewi', 'Eka', 'Fajar', 'Gilang', 'Hani', 'Indah', 'Jaya',
+            'Rian', 'Siska', 'Wira', 'Yusuf', 'Lina', 'Nika', 'Ilham', 'Friska', 'Hendra', 'Dian',
+            'Rico', 'Adit', 'Sandi', 'Vina', 'Mira', 'Reza', 'Anton', 'Putri', 'Bayu', 'Dicky',
+            'Vera', 'Tasya', 'Rini', 'Amanda', 'Kiki', 'Nova', 'Reza', 'Tari', 'Ari', 'Dinda'
+          ],
+          lastNames: [
+            'Santoso', 'Priyanto', 'Rahmat', 'Setiawan', 'Wijaya', 'Saputra', 'Lestari', 'Putri', 'Hendra', 'Susilo',
+            'Kusuma', 'Siregar', 'Gunawan', 'Permana', 'Yulianto', 'Nurfalah', 'Hartono', 'Anggraini', 'Wardhani', 'Cahyono',
+            'Wahyudi', 'Prasetyo', 'Ramadhan', 'Nugroho', 'Firmansyah', 'Pratama', 'Hidayat', 'Sanjaya', 'Hermawan', 'Putra',
+            'Chen', 'Huang', 'Zhang', 'Wu', 'Liu', 'Yang', 'Zhao', 'Lin', 'Tang', 'Wang'
+          ],
+          villages: [
+            'Pasir Panjang', 'Sedau', 'Pelabuhan Tionghoa', 'Pusat Kota', 'Komplek Merdeka',
+            'Balai Karangan', 'Roban', 'Pajintan', 'Tanjung Batu', 'Kelapa Tujuh',
+            'Singkawang Barat', 'Singkawang Timur', 'Singkawang Utara', 'Singkawang Selatan', 'Singkawang Tengah'
+          ],
+          streets: [
+            'Jl. Pemuda', 'Jl. Jend. Ahmad Yani', 'Jl. Tanjung Raya', 'Jl. Sultan Syarif Abdurrahman',
+            'Jl. Setia Budhi', 'Jl. Pasar Turi', 'Jl. Pelabuhan', 'Jl. Alianyang', 'Jl. Niaga',
+            'Jl. Diponegoro', 'Jl. Sejahtera', 'Jl. Veteran', 'Jl. Merdeka', 'Jl. Kesatuan',
+            'Jl. Pahlawan'
+          ],
+          regionLabel: 'Kota Singkawang'
+        }
+      };
+
+      const providerMap = {
+        '0812': 'Telkomsel','0813': 'Telkomsel','0821': 'Telkomsel','0822': 'Telkomsel',
+        '0855': 'Indosat','0856': 'Indosat','0857': 'Indosat','0858': 'Indosat',
+        '0817': 'XL/Axis','0818': 'XL/Axis','0819': 'XL/Axis','0859': 'XL/Axis','0877': 'XL/Axis','0878': 'XL/Axis',
+        '0896': 'Tri','0897': 'Tri','0898': 'Tri','0899': 'Tri',
+        '0881': 'Smartfren','0882': 'Smartfren','0883': 'Smartfren','0887': 'Smartfren','0888': 'Smartfren'
+      };
+      const providerPrefixes = Object.keys(providerMap);
+
+      function getRandomItem(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+      function formatPhoneNumber() {
+        const prefix = getRandomItem(providerPrefixes);
+        let num = prefix;
+        for (let i = 0; i < 8; i++) num += Math.floor(Math.random() * 10);
+        return { number: num, provider: providerMap[prefix] };
+      }
+      function formatDate() {
+        const year = Math.floor(Math.random() * 71) + 1950;
+        const month = String(Math.floor(Math.random() * 12) + 1).padStart(2, '0');
+        const day = String(Math.floor(Math.random() * 28) + 1).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+      function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.querySelector('span').textContent = message;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2000);
+      }
+      function openInMaps(address) {
+        const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+        window.open(url, '_blank');
+      }
+      function formatFollowers(rangeMin, rangeMax) {
+        return Math.floor(Math.random() * (rangeMax - rangeMin + 1)) + rangeMin;
+      }
+
+      function generateData(regionKey, count) {
+        const { jobs, firstNames, lastNames, villages, streets, regionLabel } = dataMap[regionKey];
+        const results = [];
+        for (let i = 0; i < count; i++) {
+          const jobObj = getRandomItem(jobs);
+          const village = getRandomItem(villages);
+          const street = getRandomItem(streets);
+          const first = getRandomItem(firstNames);
+          const last = getRandomItem(lastNames);
+          const name = `${first} ${last}`;
+          const username = `${first.toLowerCase()}${last.toLowerCase()}`;
+          const phoneInfo = formatPhoneNumber();
+          const birthDate = formatDate();
+          const age = new Date().getFullYear() - parseInt(birthDate.split('-')[0]);
+          const workplace = getRandomItem(jobObj.workplaces);
+          const fullAddress = `${street}, ${village}, ${regionLabel}, Kalbar`;
+
+          let minF = 100, maxF = 5000;
+          if (/Pengusaha|Pedagang|Nelayan|Barista|Koki|Pengrajin/.test(jobObj.job)) {
+            minF = 1000; maxF = 30000;
+          } else if (/Guru|Dokter|Perawat|Petugas Kesehatan/.test(jobObj.job)) {
+            minF = 100; maxF = 2000;
+          } else if (/Kepala Desa|Petugas Kecamatan|Polisi|TNI|Petugas Pemadam|Penjaga Mercusuar/.test(jobObj.job)) {
+            minF = 50; maxF = 1000;
+          } else {
+            minF = 200; maxF = 8000;
+          }
+
+          // Randomly pick one social media platform
+          const platforms = ['instagram', 'facebook', 'tiktok', 'twitter', 'youtube'];
+          const selectedPlatform = getRandomItem(platforms);
+          const followers = formatFollowers(minF, maxF);
+          
+          const social = {
+            type: selectedPlatform,
+            username: selectedPlatform === 'youtube' ? 
+              `youtube.com/${username}` : 
+              selectedPlatform === 'facebook' ? 
+              `fb.com/${username}` : 
+              `@${username}`,
+            followers: followers
+          };
+
+          results.push({
+            index: i + 1,
+            name,
+            age,
+            birthDate,
+            job: jobObj.job,
+            workplace,
+            village,
+            address: fullAddress,
+            phoneNumber: phoneInfo.number,
+            provider: phoneInfo.provider,
+            social
+          });
+        }
+        return results;
+      }
+
+      function renderEmpty() {
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-regular fa-folder-open"></i>
+            <p>Belum Ada Data. Pilih daerah dan tekan “Generate”.</p>
+          </div>
+        `;
+      }
+
+      function renderLoading() {
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = Array(6).fill(0).map(() => `
+          <div class="skeleton-card">
+            <div class="skeleton skeleton-header"></div>
+            <div class="skeleton-body">
+              ${Array(4).fill('<div class="skeleton skeleton-line"></div>').join('')}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function displayData(data) {
+        const resultsContainer = document.getElementById('results');
+        resultsContainer.innerHTML = '';
+        if (!data.length) {
+          renderEmpty();
+          return;
+        }
+        data.forEach(person => {
+          const accent = getRandomAccent();
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.style.setProperty('--card-primary', accent.primary);
+          card.style.setProperty('--card-hover', accent.hover);
+          card.style.setProperty('--card-glow', accent.glow);
+          card.innerHTML = `
+            <div class="card-header" style="background: linear-gradient(135deg, var(--bg-card) 0%, ${accent.primary}15 100%)">
+              <div class="card-header-left">
+                <div class="index-badge">#${person.index}</div>
+                <div class="avatar" style="background: linear-gradient(45deg, var(--card-primary) 0%, var(--card-hover) 100%); box-shadow: 0 4px 12px var(--card-glow)">
+                  ${person.name.charAt(0)}
+                </div>
+                <div class="title">${person.name}</div>
+              </div>
+              <div class="card-header-right">
+                <div class="region-badge" style="background: linear-gradient(135deg, var(--card-primary) 0%, var(--card-hover) 100%); box-shadow: 0 2px 8px var(--card-glow)">
+                  ${person.village}
+                </div>
+                <button class="delete-btn" data-index="${person.index}" title="Hapus Data" aria-label="Hapus Data">
+                  <i class="fa-solid fa-xmark"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="field">
+                <label><i class="fa-solid fa-cake-candles"></i></label>
+                <span>${person.birthDate} (${person.age} thn)</span>
+              </div>
+              <div class="field">
+                <label><i class="fa-solid fa-briefcase"></i></label>
+                <span>${person.job}</span>
+              </div>
+              <div class="field">
+                <label><i class="fa-solid fa-landmark"></i></label>
+                <span>${person.workplace}</span>
+              </div>
+              <div class="field">
+                <label><i class="fa-solid fa-location-dot"></i></label>
+                <span>${person.address}</span>
+              </div>
+              <div class="field phone">
+                <label><i class="fa-solid fa-phone"></i></label>
+                <span>${person.phoneNumber}</span>
+                <span class="provider-badge">${person.provider}</span>
+                <button class="copy-btn" data-value="${person.phoneNumber}" aria-label="Salin Nomor Telepon">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <div class="card-footer">
+              <a href="https://${person.social.type}.com/${person.social.username.replace('@', '')}" target="_blank" aria-label="${person.social.type}">
+                <div class="social-info">
+                  <i class="fa-brands fa-${person.social.type}"></i>
+                  <span>${person.social.username} (${person.social.followers.toLocaleString()})</span>
+                </div>
+              </a>
+            </div>
+          `;
+          resultsContainer.appendChild(card);
+          
+          // Add hover effect for this specific card
+          const avatarEl = card.querySelector('.avatar');
+          avatarEl.addEventListener('mouseover', () => {
+            avatarEl.style.boxShadow = `0 6px 20px var(--card-glow)`;
+          });
+          avatarEl.addEventListener('mouseout', () => {
+            avatarEl.style.boxShadow = `0 4px 12px var(--card-glow)`;
+          });
+        });
+
+        // Simplified delete functionality
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            allData = allData.filter(person => person.index !== index);
+            allData = allData.map((person, idx) => ({...person, index: idx + 1}));
+            applyFilters();
+            showToast('Data berhasil dihapus');
+          });
+        });
+
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+          btn.addEventListener('click', function () {
+            const value = this.getAttribute('data-value');
+            navigator.clipboard.writeText(value).then(() => {
+              showToast('Berhasil disalin!');
+            });
+          });
+        });
+      }
+
+      function applyFilters() {
+        const sortVal = document.getElementById('sortSelect').value;
+        let filtered = allData;
+        
+        if (sortVal === 'name_asc') {
+          filtered.sort((a, b) => a.name.localeCompare(b.name));
+        } else if (sortVal === 'name_desc') {
+          filtered.sort((a, b) => b.name.localeCompare(a.name));
+        } else if (sortVal === 'job_asc') {
+          filtered.sort((a, b) => a.job.localeCompare(b.job));
+        } else if (sortVal === 'job_desc') {
+          filtered.sort((a, b) => b.job.localeCompare(a.job));
+        }
+        displayData(filtered);
+      }
+
+      let allData = [];
+      document.getElementById('generateBtn').addEventListener('click', () => {
+        const region = document.getElementById('region').value;
+        let count = parseInt(document.getElementById('count').value) || 5;
+        if (count < 1 || count > 20) {
+          showToast('Jumlah data harus antara 1–20');
+          document.getElementById('toast').classList.add('error');
+          setTimeout(() => {
+            document.getElementById('toast').classList.remove('error');
+          }, 2000);
+          return;
+        }
+        document.getElementById('loading').style.display = 'flex';
+        renderLoading();
+        
+        setTimeout(() => {
+          allData = generateData(region, count);
+          applyFilters();
+          document.getElementById('loading').style.display = 'none';
+        }, 600);
+      });
+
+      document.getElementById('clearBtn').addEventListener('click', () => {
+        allData = [];
+        displayData([]);
+        showToast('Semua data berhasil dihapus');
+      });
+
+      document.getElementById('sortSelect').addEventListener('change', applyFilters);
+
+      // Add color combinations array after dataMap
+      const accentColors = [
+        { primary: '#4f46e5', hover: '#4338ca', glow: 'rgba(79, 70, 229, 0.4)' },  // Indigo
+        { primary: '#06b6d4', hover: '#0891b2', glow: 'rgba(6, 182, 212, 0.4)' },  // Cyan
+        { primary: '#10b981', hover: '#059669', glow: 'rgba(16, 185, 129, 0.4)' }, // Emerald
+        { primary: '#8b5cf6', hover: '#7c3aed', glow: 'rgba(139, 92, 246, 0.4)' }, // Violet
+        { primary: '#f59e0b', hover: '#d97706', glow: 'rgba(245, 158, 11, 0.4)' }, // Amber
+        { primary: '#ec4899', hover: '#db2777', glow: 'rgba(236, 72, 153, 0.4)' }  // Pink
+      ];
+
+      function getRandomAccent() {
+        return accentColors[Math.floor(Math.random() * accentColors.length)];
+      }
+    });
+  </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('Service worker registered'))
+        .catch(err => console.log('Service worker not registered', err));
+    });
+  }
+  </script>
+</body>
+</html>
